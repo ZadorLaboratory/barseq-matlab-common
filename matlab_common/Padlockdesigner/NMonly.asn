@@ -1,0 +1,139 @@
+Blast4-request ::= {
+  body queue-search {
+    program "blastn",
+    service "plain",
+    queries bioseq-set {
+      seq-set {
+        seq {
+          id {
+            local str "Query_143845"
+          },
+          descr {
+            user {
+              type str "CFastaReader",
+              data {
+                {
+                  label str "DefLine",
+                  data str ">"
+                }
+              }
+            }
+          },
+          inst {
+            repr raw,
+            mol na,
+            length 44,
+            seq-data ncbi2na 'FF3D160A7128038648549A'H
+          }
+        }
+      }
+    },
+    subject database "GPIPE/10090/current/rna",
+    algorithm-options {
+      {
+        name "EvalueThreshold",
+        value cutoff e-value { 1, 10, 1 }
+      },
+      {
+        name "UngappedMode",
+        value boolean FALSE
+      },
+      {
+        name "PercentIdentity",
+        value real { 0, 10, 0 }
+      },
+      {
+        name "HitlistSize",
+        value integer 100
+      },
+      {
+        name "EffectiveSearchSpace",
+        value big-integer 0
+      },
+      {
+        name "DbLength",
+        value big-integer 0
+      },
+      {
+        name "WindowSize",
+        value integer 0
+      },
+      {
+        name "DustFiltering",
+        value boolean TRUE
+      },
+      {
+        name "RepeatFiltering",
+        value boolean TRUE
+      },
+      {
+        name "MaskAtHash",
+        value boolean TRUE
+      },
+      {
+        name "DustFilteringLevel",
+        value integer 20
+      },
+      {
+        name "DustFilteringWindow",
+        value integer 64
+      },
+      {
+        name "DustFilteringLinker",
+        value integer 1
+      },
+      {
+        name "RepeatFilteringDB",
+        value string "repeatmasker/repeat_9989"
+      },
+      {
+        name "MismatchPenalty",
+        value integer -3
+      },
+      {
+        name "MatchReward",
+        value integer 2
+      },
+      {
+        name "GapOpeningCost",
+        value integer 5
+      },
+      {
+        name "GapExtensionCost",
+        value integer 2
+      },
+      {
+        name "StrandOption",
+        value strand-type both-strands
+      },
+      {
+        name "WordSize",
+        value integer 11
+      }
+    },
+    program-options {
+      {
+        name "EntrezQuery",
+        value string "all [filter] NOT((XM_000001:XM_999999[pacc] OR
+ XM_000000001:XM_99999999[pacc] OR XR_000000001:XR_999999999[pacc]))"
+      }
+    },
+    format-options {
+      {
+        name "Web_JobTitle",
+        value string "Nucleotide Sequence (44 letters)"
+      },
+      {
+        name "Web_ExclModels",
+        value boolean TRUE
+      },
+      {
+        name "Web_ShortQueryAdjust",
+        value boolean TRUE
+      }
+    }
+  }
+}
+
+
+

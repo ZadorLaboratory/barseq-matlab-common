@@ -1,0 +1,193 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>PNS toy example</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-10-20"><meta name="DC.source" content="Example.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>PNS toy example</h1><!--introduction--><p>Example of horizontal analysis using PNS</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. Set up</a></li><li><a href="#2">2. Make data</a></li><li><a href="#3">3. Fisher-Rao curve registration</a></li><li><a href="#4">4. PNS on the warping functions</a></li></ul></div><h2>1. Set up<a name="1"></a></h2><p>To make this example work, please first download J. S. Marron's softwares AllMatlab7Combined.zip on <a href="http://www.unc.edu/depts/stat-or/miscellaneous/marron/Matlab7Software/">http://www.unc.edu/depts/stat-or/miscellaneous/marron/Matlab7Software/</a> and unzip it. The softwares we need are 'General' and 'Smoothing'. Then, add 'General','Smoothing' and 'SRVF' to your search path. One way to do it is: Click on 'Set Path' -&gt; 'Add with Subfolders', select 'General', 'Smoothing' and 'SRVF', then all these three and their subfolders will be added to the search path.</p><h2>2. Make data<a name="2"></a></h2><pre class="codeinput">d = 300;
+n = 21;
+sig = 0.1;
+m = 1;
+warpRange = 5;
+b = 3;
+randn(<span class="string">'seed'</span>,0);
+
+gamO = zeros(d,n);
+a = linspace(-warpRange,warpRange,n+1); a = a(a~=0);
+t = linspace(-b,b,d);
+m=1;
+f = zeros(d,n);
+<span class="keyword">for</span> i = 1:n;
+    <span class="keyword">if</span> a(i)~=0;
+        gamO(:,i) = ((2*b)*(exp(a(i)*(t+b)/(2*b))-1)/(exp(a(i))-1)-b);
+    <span class="keyword">else</span> gamO(:,i) = t;
+    <span class="keyword">end</span>;
+<span class="keyword">end</span>;
+t = (t+b)/(2*b);
+gamO = (gamO+b)/(2*b);
+<span class="keyword">for</span> i = 1:n;
+    f(:,i) = normrnd(m,sig) * betapdf(gamO(:,i),6,12)+ <span class="keyword">...</span><span class="comment"> # 6,12</span>
+        normrnd(m,sig) * betapdf(gamO(:,i),12,6);
+<span class="keyword">end</span>;
+
+mycolor = hsvcolmapQY(n); <span class="comment">% rainbow color</span>
+
+clf ;
+hold <span class="string">on</span>;
+<span class="keyword">for</span> i = 1:n
+    plot(t, f(:,i),<span class="string">'color'</span>,mycolor(i,:))
+<span class="keyword">end</span>
+hold <span class="string">off</span>;
+</pre><img vspace="5" hspace="5" src="Example_01.png" alt=""> <h2>3. Fisher-Rao curve registration<a name="3"></a></h2><pre class="codeinput">[fn,qn,q0,fmean,mqn,gam,psi,stats]=time_warping_oneplot(f,t',mycolor);
+</pre><pre class="codeoutput">
+ lambda =   0.0 
+
+Initializing...
+Computing Karcher mean of 21 functions in SRVF space...
+updating step: r=1
+updating step: r=2
+</pre><img vspace="5" hspace="5" src="Example_02.png" alt=""> <h2>4. PNS on the warping functions<a name="4"></a></h2><pre class="codeinput">inputstruct = struct( <span class="string">'gam'</span>,gam,<span class="keyword">...</span>
+    <span class="string">'meanf'</span>,fmean,<span class="keyword">...</span>
+    <span class="string">'t'</span>,t,<span class="keyword">...</span>
+    <span class="string">'colmap'</span>,mycolor, <span class="keyword">...</span>
+    <span class="string">'plotType'</span>,2,<span class="keyword">...</span>
+    <span class="string">'npns'</span>,3);
+
+curvepnsLXS(inputstruct);
+</pre><pre class="codeoutput">Message from PNSmain.m; dataset is on 298-sphere.
+ .. found null space of dimension 278,to be trivially reduced.
+ .. then narrow down to 20-sphere
+</pre><img vspace="5" hspace="5" src="Example_03.png" alt=""> <pre>  (c)  Qunqun Yu, Xiaosun Lu  2015</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% PNS toy example
+% Example of horizontal analysis using PNS
+
+%% 1. Set up
+% To make this example work, please first download 
+% J. S. Marron's softwares AllMatlab7Combined.zip on 
+% http://www.unc.edu/depts/stat-or/miscellaneous/marron/Matlab7Software/
+% and unzip it. The softwares we need are 'General' and 'Smoothing'.
+% Then, add 'General','Smoothing' and 'SRVF' to your search path. 
+% One way to do it is:
+% Click on 'Set Path' -> 'Add with Subfolders', select 'General', 'Smoothing'
+% and 'SRVF', then all these three and their subfolders will be added to
+% the search path.
+
+%% 2. Make data
+d = 300;
+n = 21;
+sig = 0.1;
+m = 1;
+warpRange = 5;
+b = 3;
+randn('seed',0);
+
+gamO = zeros(d,n);
+a = linspace(-warpRange,warpRange,n+1); a = a(a~=0);
+t = linspace(-b,b,d);
+m=1;
+f = zeros(d,n);
+for i = 1:n;
+    if a(i)~=0;
+        gamO(:,i) = ((2*b)*(exp(a(i)*(t+b)/(2*b))-1)/(exp(a(i))-1)-b);
+    else gamO(:,i) = t;
+    end;
+end;
+t = (t+b)/(2*b);
+gamO = (gamO+b)/(2*b);
+for i = 1:n;
+    f(:,i) = normrnd(m,sig) * betapdf(gamO(:,i),6,12)+ ... # 6,12
+        normrnd(m,sig) * betapdf(gamO(:,i),12,6);
+end;
+
+mycolor = hsvcolmapQY(n); % rainbow color
+
+clf ;
+hold on;
+for i = 1:n
+    plot(t, f(:,i),'color',mycolor(i,:))
+end
+hold off;
+
+%% 3. Fisher-Rao curve registration
+[fn,qn,q0,fmean,mqn,gam,psi,stats]=time_warping_oneplot(f,t',mycolor);
+
+%% 4. PNS on the warping functions
+inputstruct = struct( 'gam',gam,...
+    'meanf',fmean,...
+    't',t,...
+    'colmap',mycolor, ...
+    'plotType',2,...
+    'npns',3);
+
+curvepnsLXS(inputstruct);
+
+
+%%
+%    (c)  Qunqun Yu, Xiaosun Lu  2015
+
+
+
+##### SOURCE END #####
+--></body></html>
